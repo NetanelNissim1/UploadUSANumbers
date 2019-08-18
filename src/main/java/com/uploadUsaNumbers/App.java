@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import com.uploadUsaNumbers.filemanager.ManageCsvFiles;
 import com.uploadUsaNumbers.filemanager.ManageProperties;
+import com.uploadUsaNumbers.filemanager.ZipFiles;
 import com.uploadUsaNumbers.model.Phone_Name_Email;
 import com.uploadUsaNumbers.utils.Utils;
 
@@ -24,10 +25,14 @@ public final class App {
     public static String UploadUSANumbersExportToPhoneNames;
     public static String UploadUSANumbersExportToMobilePhoneEmails;
     public static String UploadUSANumbersExportToMobilePhoneNames;
-    private static String UploadUSANumbersExportToMobilePhoneNamesZip;
-    private static String UploadUSANumbersExportToMobilePhoneEmailsZip;
-    private static String UploadUSANumbersExportToPhoneNamesZip;
-    private static String UploadUSANumbersExportToPhoneEmailsZip;
+    public static String UploadUSANumbersExportToMobilePhoneNamesZip;
+    public static String UploadUSANumbersExportToMobilePhoneEmailsZip;
+    public static String UploadUSANumbersExportToPhoneNamesZip;
+    public static String UploadUSANumbersExportToPhoneEmailsZip;
+    private static String UploadScraping;
+    public static String ExportScrapingToPhoneNames;
+    public static String ZipScrapingPhoneNames;
+    public static String ScrapingFolderToZip;
 
     /**
      * Says hello to the world.
@@ -53,56 +58,64 @@ public final class App {
                 .getProperties("UploadUSANumbersExportToMobilePhoneEmailsZip");
         UploadUSANumbersExportToMobilePhoneNamesZip = ManageProperties
                 .getProperties("UploadUSANumbersExportToMobilePhoneNamesZip");
-        getFiles(ManageProperties.getProperties("UploadUSANumbers"));
 
-        Thread thread_ZIP_Phone_Name = new Thread(() -> {
+        Thread thread_USA_Numbers = new Thread(() -> {
             try {
-                Utils.preZipFile(UploadUSANumbersExportToPhoneNamesZip, "PhoneNames.zip");
-            } catch (IOException ex) {
-                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+                processUSANumbers(ManageProperties.getProperties("UploadUSANumbers"));
+                ZipFiles.createZipfilesUSANumbers();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
-        thread_ZIP_Phone_Name.start();
-
-        Thread thread_ZIP_Phone_Emails = new Thread(() -> {
-            try {
-                Utils.preZipFile(UploadUSANumbersExportToPhoneEmailsZip, "PhoneEmails.zip");
-            } catch (IOException ex) {
-                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        thread_ZIP_Phone_Emails.start();
-
-        Thread thread_ZIP_mobile_Phone_Name = new Thread(() -> {
-            try {
-                Utils.preZipFile(UploadUSANumbersExportToMobilePhoneNamesZip, "MobilePhoneNames.zip");
-            } catch (IOException ex) {
-                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        thread_ZIP_mobile_Phone_Name.start();
-
-        Thread thread_ZIP_mobile_Phone_Emails = new Thread(() -> {
-            try {
-                Utils.preZipFile(UploadUSANumbersExportToMobilePhoneEmailsZip, "MobilePhoneEmails.zip");
-            } catch (IOException ex) {
-                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        thread_ZIP_mobile_Phone_Emails.start();
-
+        thread_USA_Numbers.start();
         try {
-            thread_ZIP_Phone_Name.join();
-            thread_ZIP_Phone_Emails.join();
-            thread_ZIP_mobile_Phone_Emails.join();
-            thread_ZIP_mobile_Phone_Name.join();
+            thread_USA_Numbers.join();
         } catch (InterruptedException ex) {
+        }
 
+        UploadScraping = ManageProperties.getProperties("UploadScraping");
+        ExportScrapingToPhoneNames = ManageProperties.getProperties("ExportScrapingToPhoneNames");
+        ZipScrapingPhoneNames = ManageProperties.getProperties("ZipScrapingPhoneNames");
+        ScrapingFolderToZip = ManageProperties.getProperties("ScrapingFolderToZip");
+
+        Thread thread_Scraping = new Thread(() -> {
+            processFiles(UploadScraping);
+            ZipFiles.createZipfilesScraping();
+        });
+        thread_Scraping.start();
+        try {
+            thread_Scraping.join();
+        } catch (InterruptedException ex) {
+        }
+    }
+
+    private static void processFiles(String path) {
+
+        File folder = new File(path);
+        File[] listOfFiles = folder.listFiles();
+        int count = 1;
+        List<Phone_Name_Email> numbersList = new ArrayList<>();
+
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                numbersList.addAll(ManageCsvFiles.processInputFileScraping(file.getAbsolutePath()));
+                String phone_names = "phone_names_" + count + ".csv";
+                System.out.println("phone_names: " + phone_names);
+                Thread thread_P_N = new Thread(() -> {
+                    Utils.writeToCSVPhoneNames(numbersList, phone_names);
+                });
+                thread_P_N.start();
+                try {
+                    thread_P_N.join();
+                } catch (InterruptedException ex) {
+                }
+                numbersList.clear();
+            }
         }
 
     }
 
-    private static void getFiles(String path) throws IOException {
+    private static void processUSANumbers(String path) throws IOException {
         File folder = new File(path);
         File[] listOfFiles = folder.listFiles();
         int count = 0;
@@ -162,5 +175,6 @@ public final class App {
             }
         }
         System.out.println("countAllNumbers: " + countAllNumbers);
+
     }
 }

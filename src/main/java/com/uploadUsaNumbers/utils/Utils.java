@@ -20,9 +20,9 @@ public class Utils {
 
     private static final String CSV_SEPARATOR = ",";
 
-    public static void preZipFile( String fileNameToZip, String zipFileName ) throws IOException{
+    public static void preZipFile(String folderZip, String fileNameToZip, String zipFileName ) throws IOException{
 
-        FileOutputStream fos = new FileOutputStream( App.UploadUSANumbersExportZip + zipFileName );
+        FileOutputStream fos = new FileOutputStream(folderZip + zipFileName );
         ZipOutputStream zipOut = new ZipOutputStream( fos );
         File fileToZip = new File( fileNameToZip );
         zipFile( fileToZip, fileToZip.getName(), zipOut );
@@ -153,7 +153,28 @@ public class Utils {
         }
     }
 
-
+    public static void writeToCSVScrapingPhoneNames( List<Phone_Name_Email> numberEmails, String fileName ){
+        try{
+            try ( BufferedWriter bw = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( App.ExportScrapingToPhoneNames + fileName ), "UTF-8" ) ) ){
+                for( Phone_Name_Email numberEmail : numberEmails ){
+                    if( numberEmail.getPhone() != null ){
+                        if( !numberEmail.getPhone().isEmpty() ){
+                            StringBuffer oneLine = new StringBuffer();
+                            oneLine.append( numberEmail.getPhone() );
+                            oneLine.append( CSV_SEPARATOR );
+                            oneLine.append( numberEmail.getName() );
+                            bw.write( oneLine.toString() );
+                            bw.newLine();
+                        }
+                    }
+                }
+                bw.flush();
+            }
+        } catch ( UnsupportedEncodingException e ) {
+        } catch ( FileNotFoundException e ) {
+        } catch ( IOException e ) {
+        }
+    }
 
 
 }
