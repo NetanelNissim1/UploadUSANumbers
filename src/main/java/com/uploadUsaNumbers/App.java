@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.uploadUsaNumbers.filemanager.ManageCsvFiles;
 import com.uploadUsaNumbers.filemanager.ManageProperties;
 import com.uploadUsaNumbers.filemanager.ZipFiles;
@@ -41,7 +38,6 @@ public final class App {
      */
     public static void main(String[] args) throws IOException {
 
-        System.out.println("test");
         UploadUSANumbersExportToPhoneEmails = ManageProperties.getProperties("UploadUSANumbersExportToPhoneEmails");
         UploadUSANumbersExportToPhoneNames = ManageProperties.getProperties("UploadUSANumbersExportToPhoneNames");
 
