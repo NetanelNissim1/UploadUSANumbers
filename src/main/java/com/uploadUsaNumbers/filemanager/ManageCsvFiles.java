@@ -21,6 +21,7 @@ public class ManageCsvFiles {
     private final static String COMMA = ",";
     private final static String COUNTRYCODE = "US";
     private final static Phonenumber.PhoneNumber buffer = new Phonenumber.PhoneNumber();
+    private final static Phonenumber.PhoneNumber bufferScraping = new Phonenumber.PhoneNumber();
 
     public static List<Phone_Name_Email> processInputFilePhoneEmail(String inputFilePath) {
         List<Phone_Name_Email> inputList = new ArrayList<Phone_Name_Email>();
@@ -95,7 +96,7 @@ public class ManageCsvFiles {
         phone = phone.replaceAll("\"", "");
         if (!phone.isEmpty()) {
             ValidCliWithCountryCode validCli = CliValidator.getValidE164CellularPhoneNumberAndCC(phone, COUNTRYCODE,
-                    buffer, false);
+            bufferScraping, false);
             if (validCli != null) {
                 item.setPhone(validCli.getCli());
                 item.setName(p[1].replaceAll("\"", ""));

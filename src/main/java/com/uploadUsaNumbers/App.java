@@ -55,6 +55,11 @@ public final class App {
         UploadUSANumbersExportToMobilePhoneNamesZip = ManageProperties
                 .getProperties("UploadUSANumbersExportToMobilePhoneNamesZip");
 
+        UploadScraping = ManageProperties.getProperties("UploadScraping");
+        ExportScrapingToPhoneNames = ManageProperties.getProperties("ExportScrapingToPhoneNames");
+        ZipScrapingPhoneNames = ManageProperties.getProperties("ZipScrapingPhoneNames");
+        ScrapingFolderToZip = ManageProperties.getProperties("ScrapingFolderToZip");
+
         Thread thread_USA_Numbers = new Thread(() -> {
             try {
                 processUSANumbers(ManageProperties.getProperties("UploadUSANumbers"));
@@ -64,22 +69,15 @@ public final class App {
             }
         });
         thread_USA_Numbers.start();
-        try {
-            thread_USA_Numbers.join();
-        } catch (InterruptedException ex) {
-        }
-
-        UploadScraping = ManageProperties.getProperties("UploadScraping");
-        ExportScrapingToPhoneNames = ManageProperties.getProperties("ExportScrapingToPhoneNames");
-        ZipScrapingPhoneNames = ManageProperties.getProperties("ZipScrapingPhoneNames");
-        ScrapingFolderToZip = ManageProperties.getProperties("ScrapingFolderToZip");
 
         Thread thread_Scraping = new Thread(() -> {
             processFiles(UploadScraping);
             ZipFiles.createZipfilesScraping();
         });
         thread_Scraping.start();
+
         try {
+            thread_USA_Numbers.join();
             thread_Scraping.join();
         } catch (InterruptedException ex) {
         }
@@ -98,7 +96,7 @@ public final class App {
                 String phone_names = "phone_names_" + count + ".csv";
                 System.out.println("phone_names: " + phone_names);
                 Thread thread_P_N = new Thread(() -> {
-                    Utils.writeToCSVPhoneNames(numbersList, phone_names);
+                    Utils.writeToCSVScrapingPhoneNames(numbersList, phone_names);
                 });
                 thread_P_N.start();
                 try {
