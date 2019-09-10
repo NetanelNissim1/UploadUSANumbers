@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>carrier</artifactId>
-            <version>1.104</version>
+            <version>1.113</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.bytebybyte/google-geocoding -->
         <dependency>
@@ -67,11 +67,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
-
-            <!--
-                You can run jacoco in the default profile with:
-                mvn jacoco:prepare-agent test jacoco:report
-            -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
