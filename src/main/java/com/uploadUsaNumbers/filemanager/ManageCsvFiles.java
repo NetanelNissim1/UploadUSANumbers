@@ -1,14 +1,17 @@
 package com.uploadUsaNumbers.filemanager;
 
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.opencsv.bean.CsvToBeanBuilder;
 import com.uploadUsaNumbers.Validator.CliValidator;
 import com.uploadUsaNumbers.Validator.ValidCliWithCountryCode;
 import com.uploadUsaNumbers.model.Phone_Name_Email;
 import com.uploadUsaNumbers.model.YellowPage;
+import com.uploadUsaNumbers.model.YellowPagesCSV;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -192,4 +195,26 @@ public class ManageCsvFiles {
         return item;
     };
 
+    public static List<YellowPagesCSV> processYellowPageOutPut(String inputFilePath) {
+        try {
+            List<YellowPagesCSV> beans = new CsvToBeanBuilder(new FileReader(inputFilePath))
+                    .withType(YellowPagesCSV.class).build().parse();
+            for (int i = 0; i < beans.size(); i++) {
+                YellowPagesCSV item = beans.get(i);
+                ValidCliWithCountryCode validCli = CliValidator.getValidE164CellularPhoneNumberAndCC(item.getPhone(),
+                        COUNTRYCODE, bufferYellowPages, false);
+                if (validCli != null) {
+
+                    item.setPhone(validCli.getCli());
+                    continue;
+                }
+                item.setPhone(null);
+            }
+            return beans;
+        } catch (Exception ex) {
+            System.out.println(inputFilePath);
+            System.out.println(ex.toString());
+            return null;
+        }
+    }
 }

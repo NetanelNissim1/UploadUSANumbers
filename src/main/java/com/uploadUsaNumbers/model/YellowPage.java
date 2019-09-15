@@ -11,6 +11,8 @@ public class YellowPage {
     private String phone;
     private String webSite;
     private String email;
+    private String address;
+    private String images;
 
     public String getCategory() {
         return category;
@@ -82,6 +84,22 @@ public class YellowPage {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 
 }

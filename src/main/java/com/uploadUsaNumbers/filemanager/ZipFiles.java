@@ -3,8 +3,9 @@ package com.uploadUsaNumbers.filemanager;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.uploadUsaNumbers.App;
+import com.uploadUsaNumbers.processing.ProcessCanada;
+import com.uploadUsaNumbers.processing.ProcessScraping;
+import com.uploadUsaNumbers.processing.ProcessUSANumber;
 import com.uploadUsaNumbers.utils.Utils;
 
 public class ZipFiles {
@@ -13,8 +14,8 @@ public class ZipFiles {
 
         Thread thread_ZIP_Phone_Name = new Thread(() -> {
             try {
-                Utils.preZipFile(App.UploadUSANumbersExportZip, App.UploadUSANumbersExportToPhoneNamesZip,
-                        "PhoneNames.zip");
+                Utils.preZipFile(ProcessUSANumber.UploadUSANumbersExportZip,
+                        ProcessUSANumber.UploadUSANumbersExportToPhoneNamesZip, "PhoneNames.zip");
             } catch (IOException ex) {
                 Logger.getLogger(ZipFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -23,8 +24,8 @@ public class ZipFiles {
 
         Thread thread_ZIP_Phone_Emails = new Thread(() -> {
             try {
-                Utils.preZipFile(App.UploadUSANumbersExportZip, App.UploadUSANumbersExportToPhoneEmailsZip,
-                        "PhoneEmails.zip");
+                Utils.preZipFile(ProcessUSANumber.UploadUSANumbersExportZip,
+                        ProcessUSANumber.UploadUSANumbersExportToPhoneEmailsZip, "PhoneEmails.zip");
             } catch (IOException ex) {
                 Logger.getLogger(ZipFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -33,8 +34,8 @@ public class ZipFiles {
 
         Thread thread_ZIP_mobile_Phone_Name = new Thread(() -> {
             try {
-                Utils.preZipFile(App.UploadUSANumbersExportZip, App.UploadUSANumbersExportToMobilePhoneNamesZip,
-                        "MobilePhoneNames.zip");
+                Utils.preZipFile(ProcessUSANumber.UploadUSANumbersExportZip,
+                        ProcessUSANumber.UploadUSANumbersExportToMobilePhoneNamesZip, "MobilePhoneNames.zip");
             } catch (IOException ex) {
                 Logger.getLogger(ZipFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -43,8 +44,8 @@ public class ZipFiles {
 
         Thread thread_ZIP_mobile_Phone_Emails = new Thread(() -> {
             try {
-                Utils.preZipFile(App.UploadUSANumbersExportZip, App.UploadUSANumbersExportToMobilePhoneEmailsZip,
-                        "MobilePhoneEmails.zip");
+                Utils.preZipFile(ProcessUSANumber.UploadUSANumbersExportZip,
+                        ProcessUSANumber.UploadUSANumbersExportToMobilePhoneEmailsZip, "MobilePhoneEmails.zip");
             } catch (IOException ex) {
                 Logger.getLogger(ZipFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -65,7 +66,8 @@ public class ZipFiles {
 
         Thread thread_ZIP_Phone_Name = new Thread(() -> {
             try {
-                Utils.preZipFile(App.ScrapingFolderToZip, App.ZipScrapingPhoneNames, "PhoneNames.zip");
+                Utils.preZipFile(ProcessScraping.ScrapingFolderToZip, ProcessScraping.ZipScrapingPhoneNames,
+                        "PhoneNames.zip");
             } catch (IOException ex) {
                 Logger.getLogger(ZipFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -82,7 +84,7 @@ public class ZipFiles {
 
         Thread thread_ZIP_Phone_Name = new Thread(() -> {
             try {
-                Utils.preZipFile(App.CanadaFolderToZip, App.ZipCanadaPhoneNames, "PhoneNames.zip");
+                Utils.preZipFile(ProcessCanada.CanadaFolderToZip, ProcessCanada.ZipCanadaPhoneNames, "PhoneNames.zip");
             } catch (IOException ex) {
                 Logger.getLogger(ZipFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -91,7 +93,8 @@ public class ZipFiles {
 
         Thread thread_ZIP_Phone_Emails = new Thread(() -> {
             try {
-                Utils.preZipFile(App.CanadaFolderToZip, App.ZipCanadaPhoneEmails, "PhoneEmails.zip");
+                Utils.preZipFile(ProcessCanada.CanadaFolderToZip, ProcessCanada.ZipCanadaPhoneEmails,
+                        "PhoneEmails.zip");
             } catch (IOException ex) {
                 Logger.getLogger(ZipFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
