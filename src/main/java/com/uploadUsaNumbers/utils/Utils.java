@@ -300,6 +300,62 @@ public class Utils {
         }
     }
 
+    public static long count;
+
+    public static void writeToCSVYellowPagesPhoneNames(String yellowPageExportToPhoneName,
+            List<YellowPage> phoneNamesList) {
+
+        try {
+            try (BufferedWriter bw = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(yellowPageExportToPhoneName), "UTF-8"))) {
+                for (YellowPage item : phoneNamesList) {
+                    if (item.getPhone() != null) {
+                        if (!item.getPhone().isEmpty()) {
+                            StringBuffer oneLine = new StringBuffer();
+                            oneLine.append(item.getPhone());
+                            oneLine.append(CSV_SEPARATOR);
+                            oneLine.append(item.getName());
+                            count++;
+                            bw.write(oneLine.toString());
+                            bw.newLine();
+                        }
+                    }
+                }
+                bw.flush();
+            }
+        } catch (UnsupportedEncodingException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+    }
+
+    public static void writeToCSVYellowPagesPhoneEmails(String yellowPageExportToPhoneEmail,
+            List<YellowPage> phoneEmailList) {
+
+        try {
+            try (BufferedWriter bw = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(yellowPageExportToPhoneEmail), "UTF-8"))) {
+                for (YellowPage item : phoneEmailList) {
+                    if (item.getPhone() != null && item.getEmail() != null) {
+                        if (!item.getPhone().isEmpty() && !item.getEmail().isEmpty() && isValid(item.getEmail())) {
+                            StringBuffer oneLine = new StringBuffer();
+                            oneLine.append(item.getPhone());
+                            oneLine.append(CSV_SEPARATOR);
+                            oneLine.append(item.getEmail());
+                            bw.write(oneLine.toString());
+                            bw.newLine();
+                        }
+                    }
+                }
+                bw.flush();
+            }
+        } catch (UnsupportedEncodingException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+    }
+
     // public static void writeToCSVScrapingPhoneNames(String exportToPhoneNames,
     // List<Phone_Name_Email> numberEmails, String fileName ){
     // try{

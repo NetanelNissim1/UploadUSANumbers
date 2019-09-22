@@ -1,6 +1,6 @@
 package com.uploadUsaNumbers.model;
 
-public class YellowPage {
+public class YellowPage implements Comparable {
 
     private String category;
     private String name;
@@ -66,6 +66,13 @@ public class YellowPage {
         return phone;
     }
 
+    public String getPhoneNotNull() {
+        if (phone == null) {
+            phone = "";
+        }
+        return phone;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
     }
@@ -100,6 +107,12 @@ public class YellowPage {
 
     public void setImages(String images) {
         this.images = images;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        YellowPage yello = (YellowPage) o;
+        return yello.phone.compareTo(this.phone);
     }
 
 }

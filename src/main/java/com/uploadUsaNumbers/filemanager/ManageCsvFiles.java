@@ -8,6 +8,9 @@ import com.uploadUsaNumbers.model.Phone_Name_Email;
 import com.uploadUsaNumbers.model.YellowPage;
 import com.uploadUsaNumbers.model.YellowPagesCSV;
 
+import org.eclipse.collections.impl.block.factory.HashingStrategies;
+import org.eclipse.collections.impl.utility.ListIterate;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -156,6 +159,7 @@ public class ManageCsvFiles {
 
     public static List<YellowPage> processYellowPage(String inputFilePath) {
         List<YellowPage> inputList = new ArrayList<YellowPage>();
+        List<YellowPage> inputWithoutDuplicates = new ArrayList<YellowPage>();
         try {
             File inputF = new File(inputFilePath);
             System.out.println("fileName: " + inputFilePath);
@@ -164,11 +168,14 @@ public class ManageCsvFiles {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(inputFS))) {
                 inputList = br.lines().map(mapToItemYellowPage).collect(Collectors.toList());
             }
+
+            inputWithoutDuplicates = ListIterate.distinct(inputList,
+                    HashingStrategies.fromFunction(YellowPage::getPhoneNotNull));
         } catch (IOException ex) {
             System.out.println(ex.toString());
             return null;
         }
-        return inputList;
+        return inputWithoutDuplicates;
     }
 
     private static Function<String, YellowPage> mapToItemYellowPage = (line) -> {
@@ -204,7 +211,6 @@ public class ManageCsvFiles {
                 ValidCliWithCountryCode validCli = CliValidator.getValidE164CellularPhoneNumberAndCC(item.getPhone(),
                         COUNTRYCODE, bufferYellowPages, false);
                 if (validCli != null) {
-
                     item.setPhone(validCli.getCli());
                     continue;
                 }
